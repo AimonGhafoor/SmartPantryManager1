@@ -2,15 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F8F9FA"
     android:orientation="vertical"
     android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You Can Cook Right Now"
+        android:textColor="#2C3E50"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
 
     <TextView
         android:id="@+id/tvNoRecipes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No recipes match your pantry yet - add more ingredients."
-        android:textSize="18sp"
+        android:text="No recipes match your pantry yet. Add more ingredients to see what you can cook!"
+        android:textColor="#7F8C8D"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView

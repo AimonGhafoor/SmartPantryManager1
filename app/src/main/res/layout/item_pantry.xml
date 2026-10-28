@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeColor="#E0E0E0"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- A nice green checkmark icon -->
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="#E8F8F5"
+            android:padding="6dp"
+            android:src="@android:drawable/checkbox_on_background"
+            app:tint="#27AE60" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- The Ingredient Name -->
+            <TextView
+                android:id="@+id/tvItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Egg"
+                android:textColor="#2C3E50"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- The Quantity -->
+            <TextView
+                android:id="@+id/tvItemQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2.0 pieces"
+                android:textColor="#7F8C8D"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Delete Icon on the right -->
+        <ImageView
+            android:id="@+id/btnDelete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_delete"
+            app:tint="#E74C3C" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

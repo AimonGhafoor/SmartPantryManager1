@@ -1,29 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:background="#F8F9FA">
+
+    <!-- Top Colorful Header -->
+    <View
+        android:id="@+id/headerBg"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:background="#6C5CE7"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tvSettingsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:text="⚙️ Settings"
+        android:textColor="#FFFFFF"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Switch
-        android:id="@+id/switchExpiry"
+    <!-- Card 1: Preferences -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardPreferences"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="24dp"
-        android:text="Enable Expiry Alerts" />
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        app:layout_constraintTop_toBottomOf="@id/headerBg">
 
-    <TextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preferences"
+                android:textColor="#2C3E50"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0"
+                android:layout_marginVertical="12dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchExpiry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enable Expiry Alerts"
+                android:textColor="#34495E"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Card 2: About App -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="App Version 1.0\nCreated for Mobile App Development 700"
-        android:textSize="14sp" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        app:layout_constraintTop_toBottomOf="@id/cardPreferences">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About App"
+                android:textColor="#2C3E50"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0"
+                android:layout_marginVertical="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Smart Pantry Manager v1.0"
+                android:textColor="#34495E"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Created for Mobile App Development 700\nTo help reduce food waste by suggesting recipes based on your available ingredients."
+                android:textColor="#7F8C8D"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

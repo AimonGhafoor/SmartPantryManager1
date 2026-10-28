@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.button.MaterialButton;
 import java.util.List;
 
 public class SuggestedFragment extends Fragment {
@@ -49,14 +50,13 @@ public class SuggestedFragment extends Fragment {
             tvNoRecipes.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
 
-            // We use a custom adapter defined below to avoid generic type errors
+            // Use our new custom adapter
             RecipeAdapter adapter = new RecipeAdapter(recipes);
             recyclerView.setAdapter(adapter);
         }
     }
 
-    // --- CUSTOM ADAPTER CLASS ---
-    // This is a clean, reliable way to show the list and handle clicks
+    // --- CUSTOM ADAPTER FOR BEAUTIFUL CARDS ---
     private class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
 
         private List<String> recipeList;
@@ -68,7 +68,8 @@ public class SuggestedFragment extends Fragment {
         @NonNull
         @Override
         public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+            // Inflate our new custom card layout
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_suggested_recipe, parent, false);
             return new RecipeViewHolder(view);
         }
 
@@ -77,8 +78,8 @@ public class SuggestedFragment extends Fragment {
             final String recipeName = recipeList.get(position);
             holder.textView.setText(recipeName);
 
-            // The click listener is right here, perfectly safe from generic errors
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            // Set the click listener on the button
+            holder.btnViewRecipe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
@@ -95,9 +96,12 @@ public class SuggestedFragment extends Fragment {
 
         class RecipeViewHolder extends RecyclerView.ViewHolder {
             TextView textView;
+            MaterialButton btnViewRecipe;
+
             public RecipeViewHolder(@NonNull View itemView) {
                 super(itemView);
-                textView = itemView.findViewById(android.R.id.text1);
+                textView = itemView.findViewById(R.id.tvRecipeTitle);
+                btnViewRecipe = itemView.findViewById(R.id.btnViewRecipe);
             }
         }
     }
