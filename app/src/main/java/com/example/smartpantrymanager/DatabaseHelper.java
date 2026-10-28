@@ -13,6 +13,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "PantryManager.db";
+    // IMPORTANT: If you change the database schema again, change this to 4, 5, etc.
     private static final int DATABASE_VERSION = 3;
 
     // Table Names
@@ -75,6 +76,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // --- PANTRY CRUD METHODS ---
+
+    // Create (Add)
     public void addPantryItem(String name, double quantity, String unit) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -85,6 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Read (Get all)
     public List<String> getAllPantryItems() {
         List<String> pantryList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_PANTRY;
@@ -101,18 +105,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return pantryList;
     }
 
+    // Delete
+    public void deletePantryItem(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // We use the name to delete the item. We use LOWER to make sure it matches regardless of capitalization.
+        db.delete(TABLE_PANTRY, KEY_NAME + " = ?", new String[]{name.toLowerCase().trim()});
+        db.close();
+    }
+
     // --- SEEDING METHOD ---
     private void seedRecipes(SQLiteDatabase db) {
-        // Recipe 1: Tomato Pasta
+        // Recipe 1
         insertRecipe(db, "Tomato Pasta", "1. Boil pasta. 2. Cook tomatoes. 3. Mix.", new String[]{"pasta", "tomato"});
-
-        // Recipe 2: Omelette
+        // Recipe 2
         insertRecipe(db, "Omelette", "1. Beat eggs. 2. Cook in pan.", new String[]{"egg", "butter"});
-
-        // Recipe 3: Cheese Sandwich
+        // Recipe 3
         insertRecipe(db, "Cheese Sandwich", "1. Put cheese on bread. 2. Toast.", new String[]{"bread", "cheese"});
-
-        // Recipe 4: Salad
+        // Recipe 4
         insertRecipe(db, "Salad", "1. Chop everything. 2. Mix.", new String[]{"lettuce", "tomato", "cucumber"});
     }
 

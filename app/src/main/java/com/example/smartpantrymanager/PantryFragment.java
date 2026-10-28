@@ -25,19 +25,23 @@ public class PantryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Load the layout we created for the pantry screen
         View view = inflater.inflate(R.layout.fragment_pantry, container, false);
 
         dbHelper = new DatabaseHelper(getContext());
 
+        // Find the UI elements by their IDs
         etName = view.findViewById(R.id.etItemName);
         etQuantity = view.findViewById(R.id.etQuantity);
         etUnit = view.findViewById(R.id.etUnit);
         Button btnAdd = view.findViewById(R.id.btnAdd);
         recyclerView = view.findViewById(R.id.recyclerViewPantry);
 
+        // Setup the RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         loadPantryItems();
 
+        // What happens when you click "Add to Pantry"
         btnAdd.setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
             String qtyStr = etQuantity.getText().toString().trim();
@@ -59,7 +63,7 @@ public class PantryFragment extends Fragment {
             etQuantity.setText("");
             etUnit.setText("");
 
-            // Reload the list
+            // Reload the list to show the new item
             loadPantryItems();
             Toast.makeText(getContext(), "Item added!", Toast.LENGTH_SHORT).show();
         });
@@ -67,9 +71,11 @@ public class PantryFragment extends Fragment {
         return view;
     }
 
+    // This method loads the list and uses the new Adapter constructor
     private void loadPantryItems() {
         List<String> items = dbHelper.getAllPantryItems();
-        adapter = new PantryAdapter(items);
+        // We pass the dbHelper and the callback (this::loadPantryItems) so it refreshes after deleting
+        adapter = new PantryAdapter(items, dbHelper, this::loadPantryItems);
         recyclerView.setAdapter(adapter);
     }
 }
