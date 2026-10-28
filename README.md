@@ -35,6 +35,3 @@ This app uses **SQLite** via `SQLiteOpenHelper`.
 * `SuggestedFragment.java`: Runs the strict-matching query and displays matching recipes.
 * `RecipeDetailActivity.java`: Displays the specific ingredients and steps for a chosen recipe.
 * `SettingsFragment.java`: Displays app settings and preferences.
-
-## Demonstration Video & Report
-Please refer to the submitted ZIP file for the full written report and the video demonstration.
