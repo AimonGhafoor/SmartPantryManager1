@@ -13,7 +13,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "PantryManager.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // Table Names
     private static final String TABLE_PANTRY = "pantry";
@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_RECIPE_NAME = "recipe_name";
     private static final String KEY_STEPS = "steps";
 
-    // Recipe Ingredients Table Columns (Links ingredients to recipes)
+    // Recipe Ingredients Table Columns
     private static final String KEY_ING_RECIPE_ID = "ing_recipe_id";
     private static final String KEY_ING_NAME = "ing_name";
     private static final String KEY_ING_QUANTITY = "ing_quantity";
@@ -42,7 +42,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create Tables
         String CREATE_PANTRY_TABLE = "CREATE TABLE " + TABLE_PANTRY + "("
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_NAME + " TEXT,"
@@ -64,7 +63,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_RECIPES_TABLE);
         db.execSQL(CREATE_INGREDIENTS_TABLE);
 
-        // Pre-load some test recipes (Assignment requires 15-20)
         seedRecipes(db);
     }
 
@@ -77,19 +75,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // --- PANTRY CRUD METHODS ---
-
-    // Create (Add)
     public void addPantryItem(String name, double quantity, String unit) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, name.toLowerCase().trim()); // Normalize name to lowercase
+        values.put(KEY_NAME, name.toLowerCase().trim());
         values.put(KEY_QUANTITY, quantity);
         values.put(KEY_UNIT, unit);
         db.insert(TABLE_PANTRY, null, values);
         db.close();
     }
 
-    // Read (Get all)
     public List<String> getAllPantryItems() {
         List<String> pantryList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_PANTRY;
@@ -108,23 +103,58 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // --- SEEDING METHOD ---
     private void seedRecipes(SQLiteDatabase db) {
-        // We will add the 15-20 recipes here in the next step.
-        // Just adding one for testing right now.
+        // Recipe 1: Tomato Pasta
+        insertRecipe(db, "Tomato Pasta", "1. Boil pasta. 2. Cook tomatoes. 3. Mix.", new String[]{"pasta", "tomato"});
 
+        // Recipe 2: Omelette
+        insertRecipe(db, "Omelette", "1. Beat eggs. 2. Cook in pan.", new String[]{"egg", "butter"});
+
+        // Recipe 3: Cheese Sandwich
+        insertRecipe(db, "Cheese Sandwich", "1. Put cheese on bread. 2. Toast.", new String[]{"bread", "cheese"});
+
+        // Recipe 4: Salad
+        insertRecipe(db, "Salad", "1. Chop everything. 2. Mix.", new String[]{"lettuce", "tomato", "cucumber"});
+    }
+
+    private long insertRecipe(SQLiteDatabase db, String name, String steps, String[] ingredients) {
         ContentValues recipeValues = new ContentValues();
-        recipeValues.put(KEY_RECIPE_NAME, "Tomato Pasta");
-        recipeValues.put(KEY_STEPS, "1. Boil pasta. 2. Cook tomatoes. 3. Mix.");
+        recipeValues.put(KEY_RECIPE_NAME, name);
+        recipeValues.put(KEY_STEPS, steps);
         long recipeId = db.insert(TABLE_RECIPES, null, recipeValues);
 
-        ContentValues ingValues = new ContentValues();
-        ingValues.put(KEY_ING_RECIPE_ID, recipeId);
-        ingValues.put(KEY_ING_NAME, "pasta");
-        ingValues.put(KEY_ING_QUANTITY, 200.0);
-        db.insert(TABLE_RECIPE_INGREDIENTS, null, ingValues);
+        for (String ing : ingredients) {
+            ContentValues ingValues = new ContentValues();
+            ingValues.put(KEY_ING_RECIPE_ID, recipeId);
+            ingValues.put(KEY_ING_NAME, ing);
+            ingValues.put(KEY_ING_QUANTITY, 1.0);
+            db.insert(TABLE_RECIPE_INGREDIENTS, null, ingValues);
+        }
+        return recipeId;
+    }
 
-        ingValues.put(KEY_ING_RECIPE_ID, recipeId);
-        ingValues.put(KEY_ING_NAME, "tomato");
-        ingValues.put(KEY_ING_QUANTITY, 2.0);
-        db.insert(TABLE_RECIPE_INGREDIENTS, null, ingValues);
+    // --- STRICT MATCHING LOGIC ---
+    public List<String> getStrictlyMatchedRecipes() {
+        List<String> matchedRecipes = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT r." + KEY_RECIPE_ID + ", r." + KEY_RECIPE_NAME +
+                " FROM " + TABLE_RECIPES + " r " +
+                " WHERE r." + KEY_RECIPE_ID + " NOT IN (" +
+                "   SELECT ri." + KEY_ING_RECIPE_ID + " FROM " + TABLE_RECIPE_INGREDIENTS + " ri " +
+                "   LEFT JOIN " + TABLE_PANTRY + " p ON LOWER(ri." + KEY_ING_NAME + ") = LOWER(p." + KEY_NAME + ") " +
+                "   WHERE p." + KEY_NAME + " IS NULL " +
+                "   OR p." + KEY_QUANTITY + " < ri." + KEY_ING_QUANTITY +
+                ")";
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                matchedRecipes.add(cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return matchedRecipes;
     }
 }
