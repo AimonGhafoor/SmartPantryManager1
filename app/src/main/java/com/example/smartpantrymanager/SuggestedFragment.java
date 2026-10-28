@@ -1,5 +1,6 @@
 package com.example.smartpantrymanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,6 @@ public class SuggestedFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Load the layout we created for the suggested screen
         View view = inflater.inflate(R.layout.fragment_suggested, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerViewSuggested);
@@ -36,28 +36,69 @@ public class SuggestedFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // We use onResume so that every time the user clicks the "Suggested" tab,
-        // it refreshes and checks the database again for new matches.
         loadSuggestedRecipes();
     }
 
     private void loadSuggestedRecipes() {
-        // Get the strict matches from the database
-        List<String> recipes = dbHelper.getStrictlyMatchedRecipes();
+        final List<String> recipes = dbHelper.getStrictlyMatchedRecipes();
 
         if (recipes.isEmpty()) {
-            // If no matches, show the error message and hide the list
             tvNoRecipes.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
-            // If there are matches, hide the error message and show the list
             tvNoRecipes.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
 
-            // We reuse the PantryAdapter.
-            // Since we don't want to delete recipes by tapping them, we pass an empty callback "() -> {}"
-            PantryAdapter adapter = new PantryAdapter(recipes, dbHelper, () -> {});
+            // We use a custom adapter defined below to avoid generic type errors
+            RecipeAdapter adapter = new RecipeAdapter(recipes);
             recyclerView.setAdapter(adapter);
+        }
+    }
+
+    // --- CUSTOM ADAPTER CLASS ---
+    // This is a clean, reliable way to show the list and handle clicks
+    private class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
+
+        private List<String> recipeList;
+
+        public RecipeAdapter(List<String> recipeList) {
+            this.recipeList = recipeList;
+        }
+
+        @NonNull
+        @Override
+        public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+            return new RecipeViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
+            final String recipeName = recipeList.get(position);
+            holder.textView.setText(recipeName);
+
+            // The click listener is right here, perfectly safe from generic errors
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
+                    intent.putExtra("RECIPE_NAME", recipeName);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return recipeList.size();
+        }
+
+        class RecipeViewHolder extends RecyclerView.ViewHolder {
+            TextView textView;
+            public RecipeViewHolder(@NonNull View itemView) {
+                super(itemView);
+                textView = itemView.findViewById(android.R.id.text1);
+            }
         }
     }
 }

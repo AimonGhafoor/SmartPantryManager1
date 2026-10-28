@@ -13,8 +13,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "PantryManager.db";
-    // IMPORTANT: If you change the database schema again, change this to 4, 5, etc.
-    private static final int DATABASE_VERSION = 3;
+    // IMPORTANT: We changed this to 4 so it forces the database to recreate and add the new recipes!
+    private static final int DATABASE_VERSION = 4;
 
     // Table Names
     private static final String TABLE_PANTRY = "pantry";
@@ -108,21 +108,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Delete
     public void deletePantryItem(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
-        // We use the name to delete the item. We use LOWER to make sure it matches regardless of capitalization.
         db.delete(TABLE_PANTRY, KEY_NAME + " = ?", new String[]{name.toLowerCase().trim()});
         db.close();
     }
 
-    // --- SEEDING METHOD ---
+    // --- SEEDING METHOD (Now includes 16 recipes) ---
     private void seedRecipes(SQLiteDatabase db) {
-        // Recipe 1
         insertRecipe(db, "Tomato Pasta", "1. Boil pasta. 2. Cook tomatoes. 3. Mix.", new String[]{"pasta", "tomato"});
-        // Recipe 2
-        insertRecipe(db, "Omelette", "1. Beat eggs. 2. Cook in pan.", new String[]{"egg", "butter"});
-        // Recipe 3
+        insertRecipe(db, "Omelette", "1. Beat eggs. 2. Cook in pan with butter.", new String[]{"egg", "butter"});
         insertRecipe(db, "Cheese Sandwich", "1. Put cheese on bread. 2. Toast.", new String[]{"bread", "cheese"});
-        // Recipe 4
         insertRecipe(db, "Salad", "1. Chop everything. 2. Mix.", new String[]{"lettuce", "tomato", "cucumber"});
+        insertRecipe(db, "Scrambled Eggs", "1. Whisk eggs. 2. Cook in butter.", new String[]{"egg", "butter", "milk"});
+        insertRecipe(db, "French Toast", "1. Dip bread in egg. 2. Fry.", new String[]{"bread", "egg", "milk"});
+        insertRecipe(db, "Garlic Pasta", "1. Boil pasta. 2. Fry garlic in oil. 3. Mix.", new String[]{"pasta", "garlic", "oil"});
+        insertRecipe(db, "Grilled Cheese", "1. Butter bread. 2. Grill with cheese.", new String[]{"bread", "cheese", "butter"});
+        insertRecipe(db, "Tomato Soup", "1. Boil tomatoes. 2. Blend.", new String[]{"tomato", "water", "salt"});
+        insertRecipe(db, "Tuna Sandwich", "1. Mix tuna and mayo. 2. Put on bread.", new String[]{"bread", "tuna", "mayonnaise"});
+        insertRecipe(db, "Pancakes", "1. Mix flour, milk, egg. 2. Fry.", new String[]{"flour", "milk", "egg"});
+        insertRecipe(db, "Chicken Stir-fry", "1. Fry chicken. 2. Add veggies.", new String[]{"chicken", "oil", "vegetables"});
+        insertRecipe(db, "Rice and Beans", "1. Boil rice. 2. Heat beans.", new String[]{"rice", "beans", "water"});
+        insertRecipe(db, "Peanut Butter Toast", "1. Toast bread. 2. Add peanut butter.", new String[]{"bread", "peanut butter"});
+        insertRecipe(db, "Fruit Salad", "1. Chop fruit. 2. Mix.", new String[]{"apple", "banana", "orange"});
+        insertRecipe(db, "Beef Burger", "1. Grill beef. 2. Put in bun.", new String[]{"beef", "bun", "cheese"});
     }
 
     private long insertRecipe(SQLiteDatabase db, String name, String steps, String[] ingredients) {
@@ -165,5 +172,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return matchedRecipes;
+    }
+
+    // --- GET RECIPE STEPS FOR DETAIL SCREEN ---
+    public String getRecipeSteps(String recipeName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String steps = "";
+
+        Cursor cursor = db.rawQuery("SELECT " + KEY_STEPS + " FROM " + TABLE_RECIPES +
+                " WHERE " + KEY_RECIPE_NAME + " = ?", new String[]{recipeName});
+
+        if (cursor.moveToFirst()) {
+            steps = cursor.getString(0);
+        }
+        cursor.close();
+        db.close();
+        return steps;
     }
 }
