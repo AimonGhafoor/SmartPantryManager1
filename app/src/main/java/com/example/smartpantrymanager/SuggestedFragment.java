@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.button.MaterialButton;
 import java.util.List;
 
 public class SuggestedFragment extends Fragment {
@@ -23,6 +22,7 @@ public class SuggestedFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Load the layout we created for the suggested screen
         View view = inflater.inflate(R.layout.fragment_suggested, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerViewSuggested);
@@ -37,26 +37,31 @@ public class SuggestedFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        // We use onResume so that every time the user clicks the "Suggested" tab,
+        // it refreshes and checks the database again for new matches.
         loadSuggestedRecipes();
     }
 
     private void loadSuggestedRecipes() {
+        // Get the strict matches from the database
         final List<String> recipes = dbHelper.getStrictlyMatchedRecipes();
 
         if (recipes.isEmpty()) {
+            // If no matches, show the error message and hide the list
             tvNoRecipes.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
+            // If there are matches, hide the error message and show the list
             tvNoRecipes.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
 
-            // Use our new custom adapter
+            // Use our custom adapter to display the clean editorial list
             RecipeAdapter adapter = new RecipeAdapter(recipes);
             recyclerView.setAdapter(adapter);
         }
     }
 
-    // --- CUSTOM ADAPTER FOR BEAUTIFUL CARDS ---
+    // --- CUSTOM ADAPTER FOR THE NEW CLEAN UI ---
     private class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
 
         private List<String> recipeList;
@@ -68,7 +73,7 @@ public class SuggestedFragment extends Fragment {
         @NonNull
         @Override
         public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            // Inflate our new custom card layout
+            // Inflate our clean list item layout
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_suggested_recipe, parent, false);
             return new RecipeViewHolder(view);
         }
@@ -76,10 +81,12 @@ public class SuggestedFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
             final String recipeName = recipeList.get(position);
+
+            // Set the recipe name
             holder.textView.setText(recipeName);
 
-            // Set the click listener on the button
-            holder.btnViewRecipe.setOnClickListener(new View.OnClickListener() {
+            // Make the entire row clickable to open the detail screen
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
@@ -96,12 +103,11 @@ public class SuggestedFragment extends Fragment {
 
         class RecipeViewHolder extends RecyclerView.ViewHolder {
             TextView textView;
-            MaterialButton btnViewRecipe;
 
             public RecipeViewHolder(@NonNull View itemView) {
                 super(itemView);
+                // Find the TextView from item_suggested_recipe.xml
                 textView = itemView.findViewById(R.id.tvRecipeTitle);
-                btnViewRecipe = itemView.findViewById(R.id.btnViewRecipe);
             }
         }
     }
