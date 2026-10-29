@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#F8F9FA">
 
-    <!-- Top Colorful Header -->
     <View
         android:id="@+id/headerBg"
         android:layout_width="match_parent"
@@ -26,7 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Card 1: Preferences -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardPreferences"
         android:layout_width="match_parent"
@@ -68,7 +66,6 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Card 2: About App -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

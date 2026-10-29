@@ -16,7 +16,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
         TextView tvName = findViewById(R.id.tvRecipeName);
         TextView tvSteps = findViewById(R.id.tvRecipeSteps);
 
-        // Set up a simple back button in the toolbar
         Toolbar toolbar = new Toolbar(this);
         toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -26,17 +25,14 @@ public class RecipeDetailActivity extends AppCompatActivity {
             }
         });
 
-        // Get the recipe name passed from the previous screen
         String recipeName = getIntent().getStringExtra("RECIPE_NAME");
 
         if (recipeName != null) {
             tvName.setText(recipeName);
 
-            // Get the steps from the database
             DatabaseHelper dbHelper = new DatabaseHelper(this);
             String steps = dbHelper.getRecipeSteps(recipeName);
 
-            // If the steps are empty, show a default message
             if (steps == null || steps.isEmpty()) {
                 tvSteps.setText("No steps available for this recipe.");
             } else {

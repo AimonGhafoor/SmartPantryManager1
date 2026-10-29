@@ -17,10 +17,8 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // Find the switch by its ID
         SwitchMaterial switchExpiry = view.findViewById(R.id.switchExpiry);
 
-        // Listen for when the user clicks the switch
         switchExpiry.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 Toast.makeText(getContext(), "Expiry alerts enabled", Toast.LENGTH_SHORT).show();

@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#F4F6F9">
 
-    <!-- Gradient Header -->
     <View
         android:id="@+id/headerBg"
         android:layout_width="match_parent"
@@ -13,7 +12,6 @@
         android:background="#6C5CE7"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Big Emoji -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Recipe Title -->
     <TextView
         android:id="@+id/tvRecipeName"
         android:layout_width="match_parent"
@@ -38,7 +35,6 @@
         app:layout_constraintTop_toBottomOf="@id/headerBg"
         app:layout_constraintTop_toTopOf="@id/headerBg" />
 
-    <!-- Main Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
