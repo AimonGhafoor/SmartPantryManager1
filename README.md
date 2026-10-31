@@ -25,7 +25,7 @@ This app uses **SQLite** via `SQLiteOpenHelper`.
 3. Select **File > Open** and navigate to the `SmartPantryManager` project folder.
 4. Allow Android Studio to complete the Gradle Sync (download any necessary dependencies).
 5. Select an Android Emulator (e.g., Medium Phone API 34) or connect a physical Android device.
-6. Click the green **Run (▶)** button at the top of Android Studio to build and launch the app.
+6. Click the green **Run** button at the top of Android Studio to build and launch the app.
 
 *Note: On the first run, the app will automatically create the SQLite database and pre-load 16 detailed recipes.*
 
